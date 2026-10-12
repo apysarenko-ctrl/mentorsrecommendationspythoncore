@@ -1,0 +1,241 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Python Core. Технічні рекомендації</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: одна колонка ~780px; кожен модуль — великий номер-плитка в акцентному кольорі, далі картки порад, рожевий блок помилки, блок джерел із чорними кнопками. Єдина світла тема за брифом. */
+:root{
+  --bg:#EDECE8; --surface:#F7F6F3; --ink:#000; --text:#1E1E1C; --muted:#6B6A64; --line:#D9D7D0;
+  --blue:#A8B8F0; --pink:#F5B8B8; --green:#A8E6CF; --yellow:#FFE0A0; --violet:#C8B8F0;
+  --font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --r:20px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.65;padding-inline:20px;padding-block:48px 80px}
+.wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:72px}
+h1,h2,h3,h4{color:var(--ink);margin:0;text-wrap:balance}
+h1{font-weight:900;font-size:clamp(2.4rem,8vw,4.2rem);line-height:1.02;letter-spacing:-.02em}
+h2{font-weight:900;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.12;letter-spacing:-.01em}
+h3{font-weight:800;font-size:1.25rem;display:flex;align-items:center;gap:10px}
+h4{font-weight:800;font-size:1.05rem;line-height:1.35}
+p{margin:0}
+.px{width:27px;height:27px;flex:none;display:inline-block}
+.px svg{display:block;width:100%;height:100%}
+.eyebrow{font-weight:700;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+header{display:flex;flex-direction:column;gap:24px}
+.lead{font-size:1.1rem;max-width:60ch}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font:600 .875rem var(--font);text-decoration:none;border:0;border-radius:999px;padding:10px 18px;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.btn .px{width:18px;height:18px}
+.btn.sm{padding:6px 14px;font-size:.75rem}
+section.mod{display:flex;flex-direction:column;gap:28px;scroll-margin-top:24px}
+.mod-head{display:flex;gap:20px;align-items:center}
+.num{flex:none;width:84px;height:84px;border-radius:var(--r);background:var(--c);display:grid;place-items:center;font-weight:900;font-size:2.6rem;color:var(--ink)}
+.mod-head>div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.block{display:flex;flex-direction:column;gap:14px}
+.tips{display:flex;flex-direction:column;gap:12px}
+.tip{background:var(--surface);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.tip h4{display:flex;gap:12px;align-items:baseline}
+.tip h4 b{flex:none;background:var(--c);border-radius:8px;min-width:28px;height:28px;display:inline-grid;place-items:center;font-size:.85rem;font-weight:800}
+.err{background:var(--pink);border-radius:var(--r);padding:22px 24px;color:var(--ink)}
+.src{background:var(--surface);border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+code{font-family:var(--mono);font-size:.86em;background:rgba(0,0,0,.07);border-radius:6px;padding:.12em .4em;overflow-wrap:anywhere}
+.codebox{position:relative;background:var(--ink);border-radius:14px;min-width:0}
+.codebox pre{margin:0;padding:18px 20px;overflow-x:auto;color:#F7F6F3;font:400 .85rem/1.6 var(--mono)}
+.codebox pre code{background:none;padding:0;font-size:inherit}
+.codebox button{position:absolute;top:8px;right:8px;background:#fff;color:#000;border:0;border-radius:999px;font:600 .7rem var(--font);padding:4px 12px;cursor:pointer}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:20px}
+@media(max-width:520px){.num{width:64px;height:64px;font-size:2rem}.tip,.err,.src{padding:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">GoIT · Python Core</span>
+  <h1>Технічні рекомендації</h1>
+  <p class="lead">Практичні поради до восьми модулів курсу: що варто взяти в роботу одразу, де найчастіше помиляються початківці і що почитати додатково.</p>
+  <nav aria-label="Модулі">
+    <a class="btn" href="#m1">1 · Вступ</a><a class="btn" href="#m2">2 · Потік і функції</a><a class="btn" href="#m3">3 · Дата, час, рядки</a><a class="btn" href="#m4">4 · Файли й модулі</a><a class="btn" href="#m5">5 · Функціональне</a><a class="btn" href="#m6">6 · Класи</a><a class="btn" href="#m7">7 · Розширене ООП</a><a class="btn" href="#m8">8 · Серіалізація</a>
+  </nav>
+</header>
+
+<!-- M1 -->
+<section class="mod" id="m1" style="--c:var(--blue)">
+  <div class="mod-head"><div class="num">1</div><div><span class="eyebrow">Модуль 1</span><h2>Вступ до Python</h2></div></div>
+  <p>Цей матеріал доповнює перший модуль кількома практичними порадами, які варто взяти в роботу одразу — вони стосуються того, з чим ви щодня матимете справу: змінних, типів даних і форматування виводу.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>F-рядки замість конкатенації</h4><p>Використовуйте f-рядки замість конкатенації через <code>+</code> або методу <code>.format()</code>. Порівняйте: <code>"Ціна: " + str(price) + " грн"</code> проти <code>f"Ціна: {price} грн"</code> — другий варіант коротший, читабельніший і дозволяє одразу форматувати число всередині фігурних дужок, наприклад <code>f"{price:.2f} грн"</code> округлить суму до двох знаків після коми. На практиці саме f-рядки — стандарт де-факто в сучасному Python-коді.</p></div>
+    <div class="tip"><h4><b>2</b>Пастка з дійсними числами</h4><p>Пам'ятайте про пастку з дійсними числами: вираз <code>0.2 + 0.1 == 0.3</code> поверне <code>False</code>, тому що дійсні числа зберігаються в двійковому форматі з обмеженою точністю. Для грошових розрахунків або будь-яких обчислень, де точність критична, варто або порівнювати числа з округленням, або використовувати спеціалізований модуль <code>decimal</code> — про нього детальніше поговоримо в модулі 5, але знати про саму пастку варто вже зараз.</p></div>
+    <div class="tip"><h4><b>3</b>Зрізи для розвороту й копіювання</h4><p>Зрізи (slice) — один із найкорисніших інструментів роботи зі списками та рядками. Запис <code>my_list[::-1]</code> розгортає послідовність у зворотному порядку без виклику методу <code>reverse()</code>, а <code>my_list[:]</code> створює поверхневу копію списку, що зручніше й наочніше за виклик <code>.copy()</code>.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка початківців — плутати оператор присвоєння <code>=</code> з оператором порівняння <code>==</code>. Вираз <code>x = 5</code> записує значення 5 у змінну <code>x</code>, тоді як <code>x == 5</code> лише перевіряє, чи дорівнює <code>x</code> п'яти, і повертає <code>True</code> або <code>False</code>, нічого не змінюючи. Ця помилка особливо підступна в умовних конструкціях, хоча в Python вона одразу викличе <code>SyntaxError</code>, а не мовчки зіпсує логіку, як у деяких інших мовах.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Офіційний перелік вбудованих функцій Python (built-in functions) — варто хоча б побіжно переглянути, які інструменти вже є в мові «з коробки», без імпорту.</p><a class="btn" href="https://docs.python.org/3/library/functions.html" target="_blank" rel="noopener">Built-in Functions<span class="px" data-i="arrow"></span></a></div></div>
+</section>
+
+<!-- M2 -->
+<section class="mod" id="m2" style="--c:var(--green)">
+  <div class="mod-head"><div class="num">2</div><div><span class="eyebrow">Модуль 2</span><h2>Контроль потоку та функції</h2></div></div>
+  <p>У цьому модулі ви освоюєте умови, цикли та функції — базові інструменти, з якими працюватимете в кожному наступному проєкті. Ось кілька практик, які варто виробити зараз, поки звички ще формуються.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>enumerate() замість ручного лічильника</h4><p>Коли у циклі <code>for</code> вам одночасно потрібні й індекс елемента, і сам елемент, не заводьте окрему змінну-лічильник вручну — використовуйте <code>enumerate()</code>. Замість <code>i = 0</code> / <code>for item in items: ...</code> / <code>i += 1</code> напишіть просто <code>for i, item in enumerate(items):</code>. Код стає коротшим і менш схильним до помилок на кшталт забутого <code>i += 1</code>.</p></div>
+    <div class="tip"><h4><b>2</b>Пастка зі змінюваним аргументом за замовчуванням</h4><p>Один із найвідоміших «підводних каменів» Python — змінюваний аргумент за замовчуванням. Функція <code>def add_item(item, items=[]):</code> виглядає нешкідливо, але порожній список <code>[]</code> створюється лише один раз при визначенні функції, а не при кожному виклику — тож усі виклики без явного <code>items</code> діляться одним і тим самим списком, який накопичує елементи від виклику до виклику. Правильний підхід — значення за замовчуванням <code>None</code>, а сам порожній список створювати вже всередині функції:</p>
+      <div class="codebox"><pre><code>def add_item(item, items=None):
+    if items is None:
+        items = []</code></pre></div></div>
+    <div class="tip"><h4><b>3</b>match / case для довгих ланцюжків умов</h4><p>Якщо ланцюжок <code>if</code> / <code>elif</code> / <code>else</code> стає надто довгим і порівнює одну й ту саму змінну з кількома конкретними значеннями, з Python 3.10 можна замінити його на оператор <code>match</code> / <code>case</code> — він читається природніше, особливо коли варіантів багато.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка з циклом <code>while</code> — забути оновити умову виходу всередині тіла циклу. Якщо <code>while count &lt; 10:</code> не змінює <code>count</code> у кожній ітерації, цикл ніколи не завершиться сам, і програма «зависне» — доводиться перевіряти вручну, чи справді змінна, від якої залежить умова, змінюється на кожному кроці.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Розділ офіційної документації Python про керуючі конструкції (Control Flow Tools) — там детально розписано і <code>match</code>/<code>case</code>, і особливості значень за замовчуванням у функціях.</p><a class="btn" href="https://docs.python.org/3/tutorial/controlflow.html" target="_blank" rel="noopener">Control Flow Tools<span class="px" data-i="arrow"></span></a></div></div>
+</section>
+
+<!-- M3 -->
+<section class="mod" id="m3" style="--c:var(--yellow)">
+  <div class="mod-head"><div class="num">3</div><div><span class="eyebrow">Модуль 3</span><h2>Робота з датою, часом та розширена робота з рядками</h2></div></div>
+  <p>Дати, час і рядки — теми, у яких найлегше отримати код, що працює «на моєму комп'ютері», але ламається деінде. Кілька порад нижче саме про це.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>Часові зони явно</h4><p>Там, де це можливо, працюйте з часовими зонами явно: <code>datetime.now(timezone.utc)</code> замість «наївного» <code>datetime.now()</code> без прив'язки до зони. Наївні дати зручні для навчальних прикладів, але в реальних застосунках, де користувачі можуть бути в різних часових поясах, вони — джерело прихованих багів, які важко відтворити й ще важче знайти.</p></div>
+    <div class="tip"><h4><b>2</b>math.isclose() для дійсних чисел</h4><p>Для порівняння дійсних чисел використовуйте <code>math.isclose(a, b)</code>, а не оператор <code>==</code>. Ми вже згадували пастку з <code>0.1 + 0.2 != 0.3</code> — <code>math.isclose()</code> дозволяє задати допустиму похибку (параметр <code>rel_tol</code>) і порівнювати числа «достатньо близько», а не побітово точно.</p></div>
+    <div class="tip"><h4><b>3</b>join() замість += у циклі</h4><p>Якщо потрібно зібрати рядок із багатьох частин у циклі, не робіть це через <code>+=</code> у циклі (<code>result += item</code>) — кожне таке додавання створює новий рядок у пам'яті, бо рядки незмінні. Значно ефективніше зібрати всі частини в список і одним викликом <code>" ".join(parts)</code> отримати результат.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка з регулярними виразами — забути про «сирі» рядки (raw strings). Шаблон <code>"\d+"</code> і <code>r"\d+"</code> можуть на перший погляд виглядати однаково, але без префіксу <code>r</code> звичайний рядок спершу проходить через власне екранування Python, і для складніших шаблонів це призводить до неочікуваної поведінки. Просте правило: для будь-якого регулярного виразу пишіть <code>r"..."</code>.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Сервіс regex101.com для інтерактивної перевірки регулярних виразів перед тим, як вставляти їх у код, і таблиця форматних кодів <code>strftime</code>/<code>strptime</code> в офіційній документації <code>datetime</code>.</p><nav><a class="btn" href="https://regex101.com" target="_blank" rel="noopener">regex101.com<span class="px" data-i="arrow"></span></a><a class="btn" href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes" target="_blank" rel="noopener">Форматні коди datetime<span class="px" data-i="arrow"></span></a></nav></div></div>
+</section>
+
+<!-- M4 -->
+<section class="mod" id="m4" style="--c:var(--violet)">
+  <div class="mod-head"><div class="num">4</div><div><span class="eyebrow">Модуль 4</span><h2>Робота з файлами та модульна система</h2></div></div>
+  <p>Робота з файлами й модулями — та частина курсу, де дрібні звички визначають, наскільки переносимим і стабільним вийде ваш код на різних машинах і операційних системах.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>Явний encoding='utf-8'</h4><p>Завжди явно вказуйте <code>encoding='utf-8'</code> при відкритті файлів: <code>open("data.txt", "r", encoding="utf-8")</code>. Без цього параметра Python використовує кодування за замовчуванням операційної системи — а на Windows це часто CP1251, тоді як файл міг бути збережений у UTF-8. Результат — або <code>UnicodeDecodeError</code>, або мовчазне псування кирилиці, і те й інше складно діагностувати, якщо не знати, з чого починати.</p></div>
+    <div class="tip"><h4><b>2</b>pathlib замість рядкових шляхів</h4><p>Для роботи зі шляхами обирайте <code>pathlib</code> замість рядкового конкатенування чи навіть модуля <code>os.path</code>. Запис <code>Path("data") / "reports" / "file.txt"</code> автоматично використовує правильний роздільник шляху для поточної операційної системи: у Windows це <code>\</code>, а в Linux і macOS — <code>/</code>. Натомість під час склеювання шляхів вручну через <code>+</code> потрібно самостійно враховувати ці відмінності, що легко може призвести до помилок.</p></div>
+    <div class="tip"><h4><b>3</b>requirements.txt як звичка</h4><p>Виробіть звичку фіксувати залежності проєкту: спочатку активуйте віртуальне оточення проєкту, встановіть необхідні пакети, а потім виконайте <code>pip freeze &gt; requirements.txt</code>. Після цього перевірте файл і переконайтеся, що в ньому немає зайвих пакетів. Якщо виконати <code>pip freeze</code> поза віртуальним оточенням, у <code>requirements.txt</code> можуть потрапити пакети з глобального середовища, які проєкту не потрібні.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка — назвати власний файл так само, як модуль стандартної бібліотеки, наприклад <code>random.py</code> у корені проєкту. Python шукає модулі спершу в поточній робочій директорії, тож <code>import random</code> підхопить саме ваш файл замість вбудованого модуля — і код впаде з незрозумілою помилкою, доки ви не здогадаєтесь перейменувати власний файл.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Розділ офіційної документації Python про <code>pathlib</code> — там є повний перелік методів для роботи зі шляхами, директоріями та метаданими файлів.</p><a class="btn" href="https://docs.python.org/3/library/pathlib.html" target="_blank" rel="noopener">Документація pathlib<span class="px" data-i="arrow"></span></a></div></div>
+</section>
+
+<!-- M5 -->
+<section class="mod" id="m5" style="--c:var(--pink)">
+  <div class="mod-head"><div class="num">5</div><div><span class="eyebrow">Модуль 5</span><h2>Функціональне програмування та вбудовані модулі Python</h2></div></div>
+  <p>Стандартна бібліотека Python приховує чимало готових рішень для задач, які інакше довелося б писати вручну. У цьому модулі варто звернути увагу саме на них.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>collections.Counter для підрахунку</h4><p>Для підрахунку частоти елементів (літер у рядку, слів у тексті, будь-яких гешованих значень у списку) не пишіть цикл із ручним словником-лічильником — використовуйте <code>collections.Counter</code>. <code>Counter("banana")</code> одразу дає словникоподібний об'єкт із кількістю кожного символу, а метод <code>most_common()</code> відсортує результат за спаданням частоти без додаткового коду.</p></div>
+    <div class="tip"><h4><b>2</b>Comprehensions</h4><p>List comprehensions (<code>[x**2 for x in range(10) if x % 2 == 0]</code>) справді компактніші за еквівалентний цикл <code>for</code> з <code>append()</code>, але в них легко перестаратися. Якщо вираз усередині comprehension вже не влазить в один погляд ока — краще повернутися до звичайного циклу: читабельність коду важливіша за його стислість.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка при написанні власних декораторів — забути <code>functools.wraps</code>. Без нього декорована функція «втрачає» власне ім'я та рядок документації (обидва підміняються на ім'я й документацію внутрішньої функції-обгортки), що потім заплутує і автодоповнення в редакторі, і будь-який код, який звертається до <code>__name__</code> функції.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Офіційна документація модуля <code>functools</code> — там детально описані і <code>lru_cache</code>, і <code>wraps</code>, і інші декоратори стандартної бібліотеки, які варто знати, перш ніж писати власні.</p><a class="btn" href="https://docs.python.org/3/library/functools.html" target="_blank" rel="noopener">Документація functools<span class="px" data-i="arrow"></span></a></div></div>
+</section>
+
+<!-- M6 -->
+<section class="mod" id="m6" style="--c:var(--blue)">
+  <div class="mod-head"><div class="num">6</div><div><span class="eyebrow">Модуль 6</span><h2>Основи роботи з класами</h2></div></div>
+  <p>Перші класи мають допомогти зрозуміти, як об’єднувати дані та поведінку, а не перетворитися на набір складних конструкцій.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>Починайте з простого питання: «Що є об’єктом?»</h4><p>Перед створенням класу сформулюйте, що саме ви хочете описати.</p></div>
+    <div class="tip"><h4><b>2</b>Не робіть клас просто «контейнером для всього»</h4><p>Поганий початок:</p>
+      <div class="codebox"><pre><code>class User:
+    name = …
+    age = …
+    address = …
+    orders = …
+    settings = …
+    ...</code></pre></div>
+      <p>Клас не повинен автоматично ставати місцем, куди складають усі дані, пов’язані з певною сутністю.</p><p>Краще подумати про відповідальність класу: що саме він представляє і за що відповідає.</p></div>
+    <div class="tip"><h4><b>3</b>Звикайте до __init__ та self</h4><p>Це одна з перших речей, яку варто добре зрозуміти:</p>
+      <div class="codebox"><pre><code>class User:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email</code></pre></div>
+      <p><code>self.name</code> і <code>self.email</code> — це дані конкретного екземпляра класу.</p><p>Наприклад:</p>
+      <div class="codebox"><pre><code>user1 = User("Anna", "anna@example.com")
+user2 = User("Oleh", "oleh@example.com")</code></pre></div>
+      <p><code>user1</code> і <code>user2</code> мають власні значення <code>name</code> та <code>email</code>.</p></div>
+    <div class="tip"><h4><b>4</b>Не бійтеся створювати маленькі класи</h4><p>Перший клас зовсім не повинен бути великим.</p><p>Наприклад:</p>
+      <div class="codebox"><pre><code>class BankAccount:
+    def __init__(self, balance):
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance += amount</code></pre></div>
+      <p>Цього вже достатньо, щоб потренувати:</p>
+      <ul><li>створення класу;</li><li><code>__init__</code>;</li><li><code>self</code>;</li><li>атрибути;</li><li>методи;</li><li>створення екземплярів;</li><li>зміну стану об’єкта.</li></ul></div>
+    <div class="tip"><h4><b>5</b>Методи мають працювати з даними самого об’єкта</h4><p>Якщо клас представляє банківський рахунок, логічно, щоб він сам умів поповнювати баланс:</p>
+      <div class="codebox"><pre><code>account.deposit(100)</code></pre></div>
+      <p>а не щоб зовнішній код постійно змінював його напряму:</p>
+      <div class="codebox"><pre><code>account.balance += 100</code></pre></div>
+      <p>Це поступово підводить до важливої ідеї ООП: об’єкт об’єднує стан і операції над цим станом.</p></div>
+    <div class="tip"><h4><b>6</b>Навчіться розрізняти клас та екземпляр</h4><p>Це фундаментальна річ.</p>
+      <div class="codebox"><pre><code>class Dog:
+    def __init__(self, name):
+        self.name = name</code></pre></div>
+      <p><code>Dog</code> — клас, своєрідний опис того, яким буде об’єкт.</p>
+      <div class="codebox"><pre><code>dog = Dog("Buddy")</code></pre></div>
+      <p><code>dog</code> — екземпляр класу, конкретний об’єкт.</p><p>Корисно постійно ставити собі питання: «Я зараз працюю з описом типу чи з конкретним об’єктом?»</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка — використати змінюваний тип (список, словник) як атрибут класу, очікуючи, що кожен об'єкт отримає власну копію. Якщо оголосити список на рівні класу, а не всередині <code>__init__</code>, він стане спільним для всіх екземплярів — додавання елемента в один об'єкт «магічним чином» з'явиться і в усіх інших, бо це фактично один і той самий список у пам'яті.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Офіційна документація модуля <code>dataclasses</code> та розділ про <code>Enum</code> — обидва варто хоча б переглянути, щоб знати, коли не писати шаблонний код руками.</p><nav><a class="btn" href="https://docs.python.org/3/library/dataclasses.html" target="_blank" rel="noopener">dataclasses<span class="px" data-i="arrow"></span></a><a class="btn" href="https://docs.python.org/3/library/enum.html" target="_blank" rel="noopener">Enum<span class="px" data-i="arrow"></span></a></nav></div></div>
+</section>
+
+<!-- M7 -->
+<section class="mod" id="m7" style="--c:var(--green)">
+  <div class="mod-head"><div class="num">7</div><div><span class="eyebrow">Модуль 7</span><h2>Розширене об'єктно-орієнтоване програмування в Python</h2></div></div>
+  <p>ООП — це не лише синтаксис класів, а й ціла культура написання коду, яка одразу відчувається у зрілих Python-проєктах. Кілька практик нижче допоможуть писати класи, що виглядають «по-python'івськи» з перших спроб.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>Реалізовуйте __repr__</h4><p>Краще реалізовуйте <code>__repr__</code> для власних класів, навіть якщо у вас уже є <code>__str__</code>. <code>__str__</code> призначений для читабельного виводу (наприклад, у <code>print()</code>), а <code>__repr__</code> — для однозначного, «технічного» представлення, яке бачите в консолі під час налагодження чи в логах. Якщо <code>__str__</code> немає, Python автоматично використає <code>__repr__</code> як запасний варіант — а от навпаки це не працює.</p></div>
+    <div class="tip"><h4><b>2</b>@classmethod як альтернативний конструктор</h4><p>Використовуйте <code>@classmethod</code> для альтернативних конструкторів, коли потрібно створювати об'єкт не з окремих аргументів, а, наприклад, із рядка. Класичний приклад —</p>
+      <div class="codebox"><pre><code>Employee.from_string("Ivan;Developer;50000")</code></pre></div>
+      <p>який усередині розбирає рядок і повертає готовий екземпляр <code>cls(...)</code> — це чистіше, ніж перевантажувати сам <code>__init__</code> логікою парсингу різних форматів вхідних даних.</p></div>
+    <div class="tip"><h4><b>3</b>@dataclass для класів-сховищ даних</h4><p>Якщо клас потрібен переважно для зберігання даних (а не для складної логіки), не пишіть <code>__init__</code> вручну для кожного поля — скористайтеся декоратором <code>@dataclass</code> з модуля <code>dataclasses</code>. Він сам згенерує конструктор, <code>__repr__</code> та деякі інші магічні методи за оголошеними полями класу, і код стане в рази коротшим.</p></div>
+    <div class="tip"><h4><b>4</b>Стиль EAFP замість зайвих перевірок типу</h4><p>Python традиційно тяжіє до стилю EAFP («Easier to Ask Forgiveness than Permission») — простіше спробувати виконати дію і обробити виняток, ніж заздалегідь перевіряти всі умови. Замість перевірки <code>isinstance(obj, SomeClass)</code> перед викликом методу часто природніше просто викликати потрібний метод і обробити <code>AttributeError</code>, якщо його не існує — саме на цьому й тримається качина типізація.</p></div>
+    <div class="tip"><h4><b>5</b>Enum замість «магічних» рядків і чисел</h4><p>Для набору іменованих констант (статуси замовлення, дні тижня, ролі користувачів) використовуйте <code>Enum</code> замість рядків чи чисел «навмання». Статус <code>order.status == OrderStatus.SHIPPED</code> читається набагато зрозуміліше й надійніше за <code>order.status == "shipped"</code>, де легко помилитися в написанні рядка, і жоден інструмент про це не попередить.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка при перевизначенні операторів порівняння (<code>__eq__</code>, <code>__lt__</code> тощо) — повертати <code>False</code>, коли метод не знає, як порівняти об'єкт з іншим типом даних. Правильна поведінка — повернути спеціальне значення <code>NotImplemented</code>: тоді Python спробує звернутися до відповідного методу другого об'єкта, і лише якщо жоден спосіб не спрацював, згенерує <code>TypeError</code>.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Офіційна документація Python Data Model — повний перелік магічних методів з описом, коли і навіщо кожен із них перевизначати.</p><a class="btn" href="https://docs.python.org/3/reference/datamodel.html" target="_blank" rel="noopener">Python Data Model<span class="px" data-i="arrow"></span></a></div></div>
+</section>
+
+<!-- M8 -->
+<section class="mod" id="m8" style="--c:var(--yellow)">
+  <div class="mod-head"><div class="num">8</div><div><span class="eyebrow">Модуль 8</span><h2>Серіалізація та копіювання об'єктів в Python</h2></div></div>
+  <p>Останній модуль блоку Python Core — про те, як дані «виживають» після завершення програми та як безпечно копіювати складні об'єкти. Кілька практичних рекомендацій на цю тему.</p>
+  <div class="block"><h3><span class="px" data-i="bulb"></span>Рекомендації</h3><div class="tips">
+    <div class="tip"><h4><b>1</b>json замість pickle для недовірених даних</h4><p>Коли є вибір, віддавайте перевагу <code>json</code> перед <code>pickle</code> — особливо якщо серіалізовані дані можуть потрапити ззовні (від користувача, з мережі, зі стороннього джерела). <code>pickle</code> виконує довільний код при десеріалізації, тому розпаковування pickle-даних з недовіреного джерела — це вразливість, тоді як <code>json</code> обмежений простими типами даних і не виконує код за визначенням. <code>pickle</code> варто лишати для внутрішніх задач, де ви самі і серіалізуєте, і десеріалізуєте дані.</p></div>
+    <div class="tip"><h4><b>2</b>ensure_ascii=False та indent=4 для JSON</h4><p>Якщо серіалізуєте текст із кирилицею в JSON, одразу додавайте параметри <code>ensure_ascii=False</code> (щоб символи зберігалися як є, а не як unicode escape-послідовності) та <code>indent=4</code> (щоб файл лишався читабельним для людини, а не одним суцільним рядком). Це особливо корисно, коли JSON-файл доводиться відкривати й перевіряти вручну під час налагодження.</p></div>
+    <div class="tip"><h4><b>3</b>csv.DictReader / DictWriter за іменами колонок</h4><p>Для роботи з CSV-файлами, де є рядок заголовків, використовуйте <code>csv.DictReader</code> і <code>csv.DictWriter</code> замість звичайних <code>csv.reader</code> / <code>csv.writer</code>. Тоді до значень можна звертатися за іменами колонок (<code>row["name"]</code>) замість числових індексів (<code>row[0]</code>) — код стає стійкішим до змін порядку колонок у файлі й одразу зрозумілішим для того, хто читає код пізніше.</p></div>
+  </div></div>
+  <div class="block"><h3><span class="px" data-i="warn"></span>Типова помилка</h3><div class="err"><p>Типова помилка при роботі з CSV на Windows — забути параметр <code>newline=""</code> при відкритті файлу: <code>open("data.csv", newline="")</code>. Без нього модуль <code>csv</code> може додавати зайві порожні рядки між записами через те, як по-різному Windows і сам модуль <code>csv</code> обробляють символи закінчення рядка. Ця помилка на Linux чи macOS взагалі не відтворюється, тому важливо знати про неї заздалегідь.</p></div></div>
+  <div class="block"><h3><span class="px" data-i="book"></span>Корисні джерела</h3><div class="src"><p>Офіційна документація модулів <code>json</code> та <code>csv</code> — там описані всі параметри серіалізації, включно з тими, що рідше згадуються на заняттях, але стають у пригоді на практиці.</p><nav><a class="btn" href="https://docs.python.org/3/library/json.html" target="_blank" rel="noopener">json<span class="px" data-i="arrow"></span></a><a class="btn" href="https://docs.python.org/3/library/csv.html" target="_blank" rel="noopener">csv<span class="px" data-i="arrow"></span></a></nav></div></div>
+</section>
+
+<footer>GoIT · Python Core · Технічні рекомендації до модулів 1–8 <a class="btn sm" href="#m1" style="margin-left:12px">Нагору</a></footer>
+</div>
+
+<script>
+const ICONS={
+bulb:["..#####..",".#.....#.","#...#...#","#...#...#",".#..#..#.","..#...#..","..#####..","...###...","...###..."],
+warn:["....#....","...#.#...","...#.#...","..#.#.#..","..#.#.#..",".#..#..#.",".#.....#.","#...#...#","#########"],
+book:["#########","#...#...#","#.#.#.#.#","#...#...#","#.#.#.#.#","#...#...#","#...#...#","#########","....#...."],
+arrow:[".........","....#....",".....#...","......#..","########.","......#..",".....#...","....#....","........."]
+};
+document.querySelectorAll('.px').forEach(el=>{
+  const g=ICONS[el.dataset.i];if(!g)return;let r='';
+  g.forEach((row,y)=>[...row].forEach((c,x)=>{if(c==='#')r+=`<rect x="${x}" y="${y}" width="1" height="1"/>`}));
+  el.innerHTML=`<svg viewBox="0 0 9 9" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
+});
+document.querySelectorAll('.codebox').forEach(box=>{
+  const b=document.createElement('button');b.type='button';b.textContent='Копіювати';
+  b.addEventListener('click',()=>{
+    const t=box.querySelector('code').textContent;
+    const done=()=>{b.textContent='Скопійовано';setTimeout(()=>b.textContent='Копіювати',1500)};
+    try{navigator.clipboard.writeText(t).then(done).catch(sel)}catch(e){sel()}
+    function sel(){const r=document.createRange();r.selectNodeContents(box.querySelector('code'));const s=getSelection();s.removeAllRanges();s.addRange(r)}
+  });
+  box.appendChild(b);
+});
+</script>
+
+</body></html>
